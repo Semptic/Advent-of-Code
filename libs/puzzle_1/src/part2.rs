@@ -89,7 +89,7 @@ mod tests {
             ("zoneight234", 14),
             ("7pqrstsixteen", 76),
             ("eighthree", 83), 
-            ("sevenine", 79)
+            ("twoneight", 28)
         ];
 
         for (input, expected) in test_data {
