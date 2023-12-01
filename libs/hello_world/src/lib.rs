@@ -1,12 +1,11 @@
-use log::info;
-use clap::Parser;
 use anyhow::Result;
+use clap::Parser;
+use log::info;
 
 #[derive(Parser, Debug)]
-pub struct Command {
-}
+pub struct Command {}
 
-impl common::CommandRunner for Command  {
+impl common::CommandRunner for Command {
     fn run(&self) -> Result<()> {
         hello_world();
 
