@@ -352,6 +352,7 @@ dependencies = [
  "clap",
  "common",
  "log",
+ "regex",
 ]
 
 [[package]]

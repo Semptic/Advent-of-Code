@@ -14,4 +14,6 @@ log = { workspace = true }
 anyhow = { workspace = true }
 clap = { workspace = true }
 
+regex = { version = "^1.10.2", features = ["pattern"] }
+
 common = { path = "../../libs/common"  }
