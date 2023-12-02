@@ -40,7 +40,6 @@ fn extract_first_calibration_value(input: &str) -> Result<u32> {
     let first = str_to_num(first_match)?;
 
     Ok(first * 10)
-
 }
 
 fn extract_last_calibration_value(input: &str) -> Result<u32> {
@@ -88,8 +87,8 @@ mod tests {
             ("4nineeightseven2", 42),
             ("zoneight234", 14),
             ("7pqrstsixteen", 76),
-            ("eighthree", 83), 
-            ("twoneight", 28)
+            ("eighthree", 83),
+            ("twoneight", 28),
         ];
 
         for (input, expected) in test_data {

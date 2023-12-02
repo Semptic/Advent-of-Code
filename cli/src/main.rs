@@ -43,6 +43,7 @@ fn setup(opt: &Args) -> Result<()> {
 enum Puzzles {
     HelloWorld(hello_world::Command),
     Puzzle1(puzzle_1::Command),
+    Puzzle2(puzzle_2::Command),
 }
 
 impl Puzzles {
@@ -50,6 +51,7 @@ impl Puzzles {
         match self {
             Puzzles::HelloWorld(cmd) => cmd.run().context("Failed to run hello world"),
             Puzzles::Puzzle1(cmd) => cmd.run().context("Failed to run puzzle 1"),
+            Puzzles::Puzzle2(cmd) => cmd.run().context("Failed to run puzzle 2"),
         }
     }
 }

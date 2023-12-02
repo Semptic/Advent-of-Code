@@ -26,6 +26,7 @@ ansi_term = "~0.12"
 common = { path = "../libs/common"  }
 hello_world = { path = "../libs/hello_world"  }
 puzzle_1 = { path = "../libs/puzzle_1"  }
+puzzle_2 = { path = "../libs/puzzle_2"  }
 
 [dev-dependencies]
 assert_cmd = "2"

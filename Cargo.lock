@@ -89,6 +89,7 @@ dependencies = [
  "loggerv",
  "predicates",
  "puzzle_1",
+ "puzzle_2",
 ]
 
 [[package]]
@@ -346,6 +347,17 @@ dependencies = [
 
 [[package]]
 name = "puzzle_1"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "common",
+ "log",
+ "regex",
+]
+
+[[package]]
+name = "puzzle_2"
 version = "0.1.0"
 dependencies = [
  "anyhow",
