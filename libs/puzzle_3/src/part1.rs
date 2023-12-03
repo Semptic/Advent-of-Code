@@ -1,4 +1,5 @@
 use anyhow::{Context, Result};
+use std::collections::HashSet;
 
 fn is_symbol(c: char) -> bool {
     !c.is_ascii_digit() && c != '.'

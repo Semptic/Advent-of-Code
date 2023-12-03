@@ -31,6 +31,11 @@ impl common::CommandRunner for Command {
 
         println!("Part 1: {part1_result}");
 
+        let part2_result =
+            part2::extract_part_numbers(&engine).context("Failed to extract part 2")?;
+
+        println!("Part 2: {part2_result}");
+
         Ok(())
     }
 }
