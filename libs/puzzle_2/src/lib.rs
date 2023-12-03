@@ -17,7 +17,7 @@ pub struct Command {}
 
 impl common::CommandRunner for Command {
     fn run(&self) -> Result<()> {
-        info!("Puzzle 1");
+        info!("Puzzle 2");
 
         let input_file = "data/puzzle_2/input.txt";
 

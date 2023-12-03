@@ -90,6 +90,7 @@ dependencies = [
  "predicates",
  "puzzle_1",
  "puzzle_2",
+ "puzzle_3",
 ]
 
 [[package]]
@@ -365,6 +366,16 @@ dependencies = [
  "common",
  "log",
  "regex",
+]
+
+[[package]]
+name = "puzzle_3"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "common",
+ "log",
 ]
 
 [[package]]
