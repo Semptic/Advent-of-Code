@@ -103,9 +103,9 @@ pub fn extract_part_numbers(engine: &Vec<Vec<char>>) -> Result<u32> {
                         .with_context(|| format!("Not a number: {num} ({c}: {x}/{y})"))?;
 
                     for loc in gears.iter() {
-                        if gear_map.contains_key(&loc) {
+                        if gear_map.contains_key(loc) {
                             gear_map
-                                .get_mut(&loc)
+                                .get_mut(loc)
                                 .with_context(|| format!("No set for {loc:?}"))?
                                 .insert(parsed);
                         } else {
