@@ -8,7 +8,10 @@ use anyhow::{Context, Result};
 use clap::Parser;
 use log::info;
 
-use crate::utils::*;
+use crate::{
+    part2::{count_all_wins, get_all_new_cards},
+    utils::*,
+};
 
 #[derive(Parser, Debug)]
 pub struct Command {}
@@ -32,8 +35,9 @@ impl common::CommandRunner for Command {
         let part1_results: u32 = cards.iter().map(part1::get_card_points).sum();
         println!("Part 1: {part1_results}");
 
-        // let part2_results = ???;
-        // println!("Part 2: {part2_results}");
+        let points = count_all_wins(&cards);
+        let part2_results = get_all_new_cards(&points)?;
+        println!("Part 2: {part2_results}");
 
         Ok(())
     }

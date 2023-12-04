@@ -1,11 +1,14 @@
 use crate::utils::Card;
 
-pub fn get_card_points(card: &Card) -> u32 {
-    let winner = card
-        .numbers
+pub fn count_wins(card: &Card) -> u32 {
+    card.numbers
         .iter()
         .filter(|num| card.winning_numbers.contains(num))
-        .count() as u32;
+        .count() as u32
+}
+
+pub fn get_card_points(card: &Card) -> u32 {
+    let winner = count_wins(card);
 
     if winner == 0 {
         0
