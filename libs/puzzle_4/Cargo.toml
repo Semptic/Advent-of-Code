@@ -1,0 +1,19 @@
+[package]
+name = "puzzle_4"
+
+version.workspace = true
+authors.workspace = true
+description.workspace = true
+documentation.workspace = true
+edition.workspace = true
+readme.workspace = true
+license-file.workspace = true
+
+[dependencies]
+log = { workspace = true }
+anyhow = { workspace = true }
+clap = { workspace = true }
+
+# regex = { version = "^1.10.2", features = ["pattern"] }
+
+common = { path = "../../libs/common"  }

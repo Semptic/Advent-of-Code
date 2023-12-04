@@ -91,6 +91,7 @@ dependencies = [
  "puzzle_1",
  "puzzle_2",
  "puzzle_3",
+ "puzzle_4",
 ]
 
 [[package]]
@@ -370,6 +371,16 @@ dependencies = [
 
 [[package]]
 name = "puzzle_3"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "common",
+ "log",
+]
+
+[[package]]
+name = "puzzle_4"
 version = "0.1.0"
 dependencies = [
  "anyhow",
