@@ -22,3 +22,6 @@ clap = { version = "^4.0", features = ["derive"] }
 
 [profile.dev.package."*"]
 opt-level = 3
+
+[profile.release]
+opt-level = 3 

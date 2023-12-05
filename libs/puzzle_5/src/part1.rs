@@ -31,7 +31,7 @@ pub struct PlantDetails {
     pub location: Location,
 }
 
-fn get_details(almanac: &Almanac, seed: Seed) -> Result<PlantDetails> {
+fn get_details(almanac: &Almanac, seed: Seed) -> PlantDetails {
     let soil = almanac.soil(seed);
     let fertilizer = almanac.fertilizer(soil);
     let water = almanac.water(fertilizer);
@@ -40,7 +40,7 @@ fn get_details(almanac: &Almanac, seed: Seed) -> Result<PlantDetails> {
     let humidity = almanac.humidity(temperature);
     let location = almanac.location(humidity);
 
-    Ok(PlantDetails {
+    PlantDetails {
         seed,
         soil,
         fertilizer,
@@ -49,18 +49,15 @@ fn get_details(almanac: &Almanac, seed: Seed) -> Result<PlantDetails> {
         temperature,
         humidity,
         location,
-    })
+    }
 }
 
-pub fn get_lowest_location(seeds: Vec<Seed>, almanac: &Almanac) -> Result<PlantDetails> {
-    let details: Result<Vec<_>> = seeds
-        .iter()
-        .map(|seed| get_details(almanac, *seed))
-        .collect();
-    let details = details.context("Failed to extract details")?;
-
-    details
-        .into_iter()
+pub fn get_lowest_location<I: Iterator<Item = Seed>>(
+    seeds: I,
+    almanac: &Almanac,
+) -> Result<PlantDetails> {
+    seeds
+        .map(|seed| get_details(almanac, seed))
         .min_by_key(|details| details.location)
         .context("Failed to find lowest location")
 }
@@ -122,7 +119,7 @@ mod test {
         let lines: Vec<_> = input.lines().skip(1).collect();
         let almanac = parse_input(&lines).unwrap();
 
-        let actual = get_lowest_location(seeds, &almanac).unwrap();
+        let actual = get_lowest_location(seeds.into_iter(), &almanac).unwrap();
 
         assert_eq!(
             actual,

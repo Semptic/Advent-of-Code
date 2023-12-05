@@ -2,7 +2,7 @@ use anyhow::{bail, Context, Result};
 use derive_more::Display;
 use std::fmt::Debug;
 
-type Id = u64;
+pub type Id = u64;
 
 #[derive(Debug, Display)]
 enum BlockType {
@@ -161,7 +161,7 @@ impl From<Humidity> for Location {
     }
 }
 #[derive(PartialEq)]
-struct Range<S: Into<Id>, D: From<Id> + From<S>> {
+pub struct Range<S: Into<Id>, D: From<Id> + From<S>> {
     pub source: Id,
     pub destination: Id,
     pub length: Id,
@@ -311,6 +311,8 @@ pub fn parse_input(input: &[&str]) -> Result<Almanac> {
 
     let mut block: Option<BlockType> = None;
     for line in input {
+        let line = line.trim();
+
         if block.is_some() {
             if line.is_empty() {
                 block = None;
@@ -429,7 +431,7 @@ mod tests {
     #[test]
     fn test_parse_input() {
         let input = input();
-        let lines: Vec<_> = input.lines().collect();
+        let lines: Vec<_> = input.lines().skip(1).collect();
 
         let actual = parse_input(&lines).unwrap();
 
