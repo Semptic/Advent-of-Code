@@ -14,7 +14,7 @@ enum BlockType {
 }
 
 #[derive(Debug, Display, Clone, Copy, Hash, Eq, PartialEq, Ord, PartialOrd)]
-pub struct Seed(u32);
+pub struct Seed(pub u32);
 
 impl From<u32> for Seed {
     fn from(num: u32) -> Self {
@@ -23,7 +23,7 @@ impl From<u32> for Seed {
 }
 
 #[derive(Debug, Display, Clone, Copy, Hash, Eq, PartialEq, Ord, PartialOrd)]
-pub struct Soil(u32);
+pub struct Soil(pub u32);
 
 impl From<u32> for Soil {
     fn from(num: u32) -> Self {
@@ -38,7 +38,7 @@ impl From<Seed> for Soil {
 }
 
 #[derive(Debug, Display, Clone, Copy, Hash, Eq, PartialEq, Ord, PartialOrd)]
-pub struct Fertilizer(u32);
+pub struct Fertilizer(pub u32);
 
 impl From<u32> for Fertilizer {
     fn from(num: u32) -> Self {
@@ -53,7 +53,7 @@ impl From<Soil> for Fertilizer {
 }
 
 #[derive(Debug, Display, Clone, Copy, Hash, Eq, PartialEq, Ord, PartialOrd)]
-pub struct Water(u32);
+pub struct Water(pub u32);
 
 impl From<u32> for Water {
     fn from(num: u32) -> Self {
@@ -67,7 +67,7 @@ impl From<Fertilizer> for Water {
     }
 }
 #[derive(Debug, Display, Clone, Copy, Hash, Eq, PartialEq, Ord, PartialOrd)]
-pub struct Light(u32);
+pub struct Light(pub u32);
 
 impl From<u32> for Light {
     fn from(num: u32) -> Self {
@@ -82,7 +82,7 @@ impl From<Water> for Light {
 }
 
 #[derive(Debug, Display, Clone, Copy, Hash, Eq, PartialEq, Ord, PartialOrd)]
-pub struct Temperature(u32);
+pub struct Temperature(pub u32);
 impl From<u32> for Temperature {
     fn from(num: u32) -> Self {
         Temperature(num)
@@ -96,7 +96,7 @@ impl From<Light> for Temperature {
 }
 
 #[derive(Debug, Display, Clone, Copy, Hash, Eq, PartialEq, Ord, PartialOrd)]
-pub struct Humidity(u32);
+pub struct Humidity(pub u32);
 
 impl From<u32> for Humidity {
     fn from(num: u32) -> Self {
@@ -110,7 +110,7 @@ impl From<Temperature> for Humidity {
     }
 }
 #[derive(Debug, Display, Clone, Copy, Hash, Eq, PartialEq, Ord, PartialOrd)]
-pub struct Location(u32);
+pub struct Location(pub u32);
 
 impl From<u32> for Location {
     fn from(num: u32) -> Self {
@@ -218,7 +218,6 @@ fn extract_map(line: &str) -> Result<HashMap<u32, u32>> {
 
     let parts = parts.with_context(|| format!("Failed to parse {line}"))?;
 
-    println!("parts: {parts:?}");
     if parts.len() != 3 {
         bail!("Invalid line: {}", line);
     }
@@ -264,25 +263,18 @@ pub fn parse_input(input: &str) -> Result<Almanac> {
                 }
             }
         } else if line.contains("seed-to-soil map") {
-            println!("seed-to-soil");
             block = Some(BlockType::SeedToSoil);
         } else if line.contains("soil-to-fertilizer map") {
-            println!("soil-to-fertilizer");
             block = Some(BlockType::SoilToFertilizer);
         } else if line.contains("fertilizer-to-water map") {
-            println!("fertilizer-to-water");
             block = Some(BlockType::FertilizerToWater);
         } else if line.contains("water-to-light map") {
-            println!("water-to-light");
             block = Some(BlockType::WaterToLight);
         } else if line.contains("light-to-temperature map") {
-            println!("light-to-temperature");
             block = Some(BlockType::LightToTemperature);
         } else if line.contains("temperature-to-humidity map") {
-            println!("temperature-to-humidity");
             block = Some(BlockType::TemperatureToHumidity);
         } else if line.contains("humidity-to-location map") {
-            println!("humidity-to-location");
             block = Some(BlockType::HumidityToLocation);
         }
     }

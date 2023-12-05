@@ -8,6 +8,8 @@ use anyhow::{bail, Context, Result};
 use clap::Parser;
 use log::info;
 
+use crate::part1::{get_lowest_location, PlantDetails};
+
 #[derive(Parser, Debug)]
 pub struct Command {}
 
@@ -22,8 +24,9 @@ impl common::CommandRunner for Command {
 
         let almanac = utils::parse_input(&input).context("Failed to parse almanac")?;
 
-        let part1_results: u32 = bail!("Not implemented");
-        println!("Part 1: {part1_results}");
+        let part1_results: PlantDetails = get_lowest_location(&almanac)?;
+        let part1_location = part1_results.location;
+        println!("Part 1: {part1_location}");
 
         let part2_results: u32 = bail!("Not implemented");
         println!("Part 2: {part2_results}");
