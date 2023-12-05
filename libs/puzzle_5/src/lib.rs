@@ -20,6 +20,8 @@ impl common::CommandRunner for Command {
         let input = fs::read_to_string(input_file)
             .with_context(|| format!("Failed to read input file {input_file}"))?;
 
+        let almanac = utils::parse_input(&input).context("Failed to parse almanac")?;
+
         let part1_results: u32 = bail!("Not implemented");
         println!("Part 1: {part1_results}");
 
