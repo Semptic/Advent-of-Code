@@ -1,55 +1,184 @@
 use anyhow::{bail, Context, Result};
+use derive_more::Display;
 use std::collections::HashMap;
+
+#[derive(Debug, Display)]
+enum BlockType {
+    SeedToSoil,
+    SoilToFertilizer,
+    FertilizerToWater,
+    WaterToLight,
+    LightToTemperature,
+    TemperatureToHumidity,
+    HumidityToLocation,
+}
+
+#[derive(Debug, Display, Clone, Copy, Hash, Eq, PartialEq, Ord, PartialOrd)]
+pub struct Seed(u32);
+
+impl From<u32> for Seed {
+    fn from(num: u32) -> Self {
+        Seed(num)
+    }
+}
+
+#[derive(Debug, Display, Clone, Copy, Hash, Eq, PartialEq, Ord, PartialOrd)]
+pub struct Soil(u32);
+
+impl From<u32> for Soil {
+    fn from(num: u32) -> Self {
+        Soil(num)
+    }
+}
+
+impl From<Seed> for Soil {
+    fn from(seed: Seed) -> Self {
+        Soil(seed.0)
+    }
+}
+
+#[derive(Debug, Display, Clone, Copy, Hash, Eq, PartialEq, Ord, PartialOrd)]
+pub struct Fertilizer(u32);
+
+impl From<u32> for Fertilizer {
+    fn from(num: u32) -> Self {
+        Fertilizer(num)
+    }
+}
+
+impl From<Soil> for Fertilizer {
+    fn from(soil: Soil) -> Self {
+        Fertilizer(soil.0)
+    }
+}
+
+#[derive(Debug, Display, Clone, Copy, Hash, Eq, PartialEq, Ord, PartialOrd)]
+pub struct Water(u32);
+
+impl From<u32> for Water {
+    fn from(num: u32) -> Self {
+        Water(num)
+    }
+}
+
+impl From<Fertilizer> for Water {
+    fn from(fertilizer: Fertilizer) -> Self {
+        Water(fertilizer.0)
+    }
+}
+#[derive(Debug, Display, Clone, Copy, Hash, Eq, PartialEq, Ord, PartialOrd)]
+pub struct Light(u32);
+
+impl From<u32> for Light {
+    fn from(num: u32) -> Self {
+        Light(num)
+    }
+}
+
+impl From<Water> for Light {
+    fn from(water: Water) -> Self {
+        Light(water.0)
+    }
+}
+
+#[derive(Debug, Display, Clone, Copy, Hash, Eq, PartialEq, Ord, PartialOrd)]
+pub struct Temperature(u32);
+impl From<u32> for Temperature {
+    fn from(num: u32) -> Self {
+        Temperature(num)
+    }
+}
+
+impl From<Light> for Temperature {
+    fn from(light: Light) -> Self {
+        Temperature(light.0)
+    }
+}
+
+#[derive(Debug, Display, Clone, Copy, Hash, Eq, PartialEq, Ord, PartialOrd)]
+pub struct Humidity(u32);
+
+impl From<u32> for Humidity {
+    fn from(num: u32) -> Self {
+        Humidity(num)
+    }
+}
+
+impl From<Temperature> for Humidity {
+    fn from(temperature: Temperature) -> Self {
+        Humidity(temperature.0)
+    }
+}
+#[derive(Debug, Display, Clone, Copy, Hash, Eq, PartialEq, Ord, PartialOrd)]
+pub struct Location(u32);
+
+impl From<u32> for Location {
+    fn from(num: u32) -> Self {
+        Location(num)
+    }
+}
+
+impl From<Humidity> for Location {
+    fn from(humidity: Humidity) -> Self {
+        Location(humidity.0)
+    }
+}
 
 #[derive(Debug, PartialEq)]
 pub struct Almanac {
-    pub seeds: Vec<u32>,
-    pub seed_to_soil: HashMap<u32, u32>,
-    pub soil_to_fertilizer: HashMap<u32, u32>,
-    pub fertilizer_to_water: HashMap<u32, u32>,
-    pub water_to_light: HashMap<u32, u32>,
-    pub light_to_temperature: HashMap<u32, u32>,
-    pub temperature_to_humidity: HashMap<u32, u32>,
-    pub humidity_to_location: HashMap<u32, u32>,
+    pub seeds: Vec<Seed>,
+    seed_to_soil: HashMap<Seed, Soil>,
+    soil_to_fertilizer: HashMap<Soil, Fertilizer>,
+    fertilizer_to_water: HashMap<Fertilizer, Water>,
+    water_to_light: HashMap<Water, Light>,
+    light_to_temperature: HashMap<Light, Temperature>,
+    temperature_to_humidity: HashMap<Temperature, Humidity>,
+    humidity_to_location: HashMap<Humidity, Location>,
 }
 
 impl Almanac {
-    fn soil(self: &Self, seed: &u32) -> u32 {
-        self.seed_to_soil.get(seed).unwrap_or(seed).clone()
+    pub fn soil(&self, seed: Seed) -> Soil {
+        self.seed_to_soil.get(&seed).cloned().unwrap_or(seed.into())
     }
-    fn fertilizer(self: &Self, soil: &u32) -> u32 {
-        self.soil_to_fertilizer.get(soil).unwrap_or(soil).clone()
+    pub fn fertilizer(&self, soil: Soil) -> Fertilizer {
+        self.soil_to_fertilizer
+            .get(&soil)
+            .cloned()
+            .unwrap_or(soil.into())
     }
-    fn water(self: &Self, fertilizer: &u32) -> u32 {
+    pub fn water(&self, fertilizer: Fertilizer) -> Water {
         self.fertilizer_to_water
-            .get(fertilizer)
-            .unwrap_or(fertilizer)
-            .clone()
+            .get(&fertilizer)
+            .cloned()
+            .unwrap_or(fertilizer.into())
     }
-    fn light(self: &Self, water: &u32) -> u32 {
-        self.water_to_light.get(water).unwrap_or(water).clone()
+    pub fn light(&self, water: Water) -> Light {
+        self.water_to_light
+            .get(&water)
+            .cloned()
+            .unwrap_or(water.into())
     }
-    fn temperature(self: &Self, light: &u32) -> u32 {
+    pub fn temperature(&self, light: Light) -> Temperature {
         self.light_to_temperature
-            .get(light)
-            .unwrap_or(light)
-            .clone()
+            .get(&light)
+            .cloned()
+            .unwrap_or(light.into())
     }
-    fn humidity(self: &Self, temperature: &u32) -> u32 {
+    pub fn humidity(&self, temperature: Temperature) -> Humidity {
         self.temperature_to_humidity
-            .get(temperature)
-            .unwrap_or(temperature)
-            .clone()
+            .get(&temperature)
+            .cloned()
+            .unwrap_or(temperature.into())
     }
-    fn location(self: &Self, humidity: &u32) -> u32 {
+    pub fn location(&self, humidity: Humidity) -> Location {
         self.humidity_to_location
-            .get(humidity)
-            .unwrap_or(humidity)
-            .clone()
+            .get(&humidity)
+            .cloned()
+            .unwrap_or(humidity.into())
     }
 }
 
-fn extract_seeds(input: &str) -> Result<Vec<u32>> {
+fn extract_seeds(input: &str) -> Result<Vec<Seed>> {
     let raw_seeds = input
         .trim()
         .split(':')
@@ -62,6 +191,7 @@ fn extract_seeds(input: &str) -> Result<Vec<u32>> {
         .filter(|num| !num.is_empty())
         .map(|num| {
             num.parse()
+                .map(Seed)
                 .with_context(|| format!("Failed to parse {num}"))
         })
         .collect()
@@ -108,62 +238,86 @@ pub fn parse_input(input: &str) -> Result<Almanac> {
     let seed_line = input.lines().next().context("Empty input")?;
     let seeds = extract_seeds(seed_line)?;
 
-    let mut almanac = Almanac {
-        seeds,
-        seed_to_soil: HashMap::new(),
-        soil_to_fertilizer: HashMap::new(),
-        fertilizer_to_water: HashMap::new(),
-        water_to_light: HashMap::new(),
-        light_to_temperature: HashMap::new(),
-        temperature_to_humidity: HashMap::new(),
-        humidity_to_location: HashMap::new(),
-    };
+    let mut seed_to_soil = HashMap::new();
+    let mut soil_to_fertilizer = HashMap::new();
+    let mut fertilizer_to_water = HashMap::new();
+    let mut water_to_light = HashMap::new();
+    let mut light_to_temperature = HashMap::new();
+    let mut temperature_to_humidity = HashMap::new();
+    let mut humidity_to_location = HashMap::new();
 
-    let mut in_block = false;
-    let mut target_map: Option<&mut HashMap<u32, u32>> = None;
+    let mut block: Option<BlockType> = None;
     for line in input.lines().map(|line| line.trim()).skip(1) {
-        if in_block {
+        if block.is_some() {
             if line.is_empty() {
-                in_block = false;
-                target_map = None;
-            } else if let Some(map) = target_map {
-                let extraced = extract_map(line)?;
-
-                map.extend(extraced);
-                target_map = Some(map);
+                block = None;
+            } else if let Some(block_type) = &block {
+                let map = extract_map(line)?;
+                match block_type {
+                    BlockType::SeedToSoil => seed_to_soil.extend(map),
+                    BlockType::SoilToFertilizer => soil_to_fertilizer.extend(map),
+                    BlockType::FertilizerToWater => fertilizer_to_water.extend(map),
+                    BlockType::WaterToLight => water_to_light.extend(map),
+                    BlockType::LightToTemperature => light_to_temperature.extend(map),
+                    BlockType::TemperatureToHumidity => temperature_to_humidity.extend(map),
+                    BlockType::HumidityToLocation => humidity_to_location.extend(map),
+                }
             }
         } else if line.contains("seed-to-soil map") {
             println!("seed-to-soil");
-            in_block = true;
-            target_map = Some(&mut almanac.seed_to_soil);
+            block = Some(BlockType::SeedToSoil);
         } else if line.contains("soil-to-fertilizer map") {
             println!("soil-to-fertilizer");
-            in_block = true;
-            target_map = Some(&mut almanac.soil_to_fertilizer);
+            block = Some(BlockType::SoilToFertilizer);
         } else if line.contains("fertilizer-to-water map") {
             println!("fertilizer-to-water");
-            in_block = true;
-            target_map = Some(&mut almanac.fertilizer_to_water);
+            block = Some(BlockType::FertilizerToWater);
         } else if line.contains("water-to-light map") {
             println!("water-to-light");
-            in_block = true;
-            target_map = Some(&mut almanac.water_to_light);
+            block = Some(BlockType::WaterToLight);
         } else if line.contains("light-to-temperature map") {
             println!("light-to-temperature");
-            in_block = true;
-            target_map = Some(&mut almanac.light_to_temperature);
+            block = Some(BlockType::LightToTemperature);
         } else if line.contains("temperature-to-humidity map") {
             println!("temperature-to-humidity");
-            in_block = true;
-            target_map = Some(&mut almanac.temperature_to_humidity);
+            block = Some(BlockType::TemperatureToHumidity);
         } else if line.contains("humidity-to-location map") {
             println!("humidity-to-location");
-            in_block = true;
-            target_map = Some(&mut almanac.humidity_to_location);
+            block = Some(BlockType::HumidityToLocation);
         }
     }
 
-    Ok(almanac)
+    Ok(Almanac {
+        seeds,
+        seed_to_soil: seed_to_soil
+            .into_iter()
+            .map(|(k, v)| (k.into(), v.into()))
+            .collect(),
+        soil_to_fertilizer: soil_to_fertilizer
+            .into_iter()
+            .map(|(k, v)| (k.into(), v.into()))
+            .collect(),
+        fertilizer_to_water: fertilizer_to_water
+            .into_iter()
+            .map(|(k, v)| (k.into(), v.into()))
+            .collect(),
+        water_to_light: water_to_light
+            .into_iter()
+            .map(|(k, v)| (k.into(), v.into()))
+            .collect(),
+        light_to_temperature: light_to_temperature
+            .into_iter()
+            .map(|(k, v)| (k.into(), v.into()))
+            .collect(),
+        temperature_to_humidity: temperature_to_humidity
+            .into_iter()
+            .map(|(k, v)| (k.into(), v.into()))
+            .collect(),
+        humidity_to_location: humidity_to_location
+            .into_iter()
+            .map(|(k, v)| (k.into(), v.into()))
+            .collect(),
+    })
 }
 
 #[cfg(test)]
@@ -211,11 +365,10 @@ mod tests {
     fn test_extract_seeds() {
         let input = "   seeds: 79 14 55 1213   ";
 
-        let actual = extract_seeds(input).unwrap();
-
-        let expected = vec![79, 14, 55, 1213];
-
-        assert_eq!(actual, expected);
+        assert_eq!(
+            extract_seeds(input).unwrap(),
+            vec![Seed(79), Seed(14), Seed(55), Seed(1213)]
+        );
     }
 
     #[test]
@@ -238,30 +391,34 @@ mod tests {
         let actual = parse_input(input).unwrap();
 
         // Seed extraction
-        assert_eq!(actual.seeds, vec![79, 14, 55, 13], "Seed extraction");
+        assert_eq!(
+            actual.seeds,
+            vec![Seed(79), Seed(14), Seed(55), Seed(13)],
+            "Seed extraction"
+        );
 
         // seed-to-soil
         assert_eq!(actual.seed_to_soil.len(), 50, "seed-to-soil");
         // 50 98 2
         assert_eq!(
-            actual.seed_to_soil.get(&98),
-            Some(&50),
+            actual.seed_to_soil.get(&Seed(98)),
+            Some(&Soil(50)),
             "seed-to-soil: 50 98 2 #1"
         );
         assert_eq!(
-            actual.seed_to_soil.get(&99),
-            Some(&51),
+            actual.seed_to_soil.get(&Seed(99)),
+            Some(&Soil(51)),
             "seed-to-soil: 50 98 2 #2"
         );
         // 52 50 48
         assert_eq!(
-            actual.seed_to_soil.get(&50),
-            Some(&52),
+            actual.seed_to_soil.get(&Seed(50)),
+            Some(&Soil(52)),
             "seed-to-soil: 52 50 48 #1"
         );
         assert_eq!(
-            actual.seed_to_soil.get(&97),
-            Some(&99),
+            actual.seed_to_soil.get(&Seed(97)),
+            Some(&Soil(99)),
             "seed-to-soil: 52 50 48 #2"
         );
 
@@ -269,45 +426,45 @@ mod tests {
         assert_eq!(actual.soil_to_fertilizer.len(), 54, "soil-to-fertilizer");
         // 0 15 37
         assert_eq!(
-            actual.soil_to_fertilizer.get(&15),
-            Some(&0),
+            actual.soil_to_fertilizer.get(&Soil(15)),
+            Some(&Fertilizer(0)),
             "soil-to-fertilizer: 0 15 37 #1"
         );
         assert_eq!(
-            actual.soil_to_fertilizer.get(&20),
-            Some(&5),
+            actual.soil_to_fertilizer.get(&Soil(20)),
+            Some(&Fertilizer(5)),
             "soil-to-fertilizer: 0 15 37 #2"
         );
         assert_eq!(
-            actual.soil_to_fertilizer.get(&51),
-            Some(&36),
+            actual.soil_to_fertilizer.get(&Soil(51)),
+            Some(&Fertilizer(36)),
             "soil-to-fertilizer: 0 15 37 #3"
         );
         // 37 52 2
         assert_eq!(
-            actual.soil_to_fertilizer.get(&52),
-            Some(&37),
+            actual.soil_to_fertilizer.get(&Soil(52)),
+            Some(&Fertilizer(37)),
             "soil-to-fertilizer: 37 52 2 #1"
         );
         assert_eq!(
-            actual.soil_to_fertilizer.get(&53),
-            Some(&38),
+            actual.soil_to_fertilizer.get(&Soil(53)),
+            Some(&Fertilizer(38)),
             "soil-to-fertilizer: 37 52 2 #2"
         );
         // 39 0 15
         assert_eq!(
-            actual.soil_to_fertilizer.get(&0),
-            Some(&39),
+            actual.soil_to_fertilizer.get(&Soil(0)),
+            Some(&Fertilizer(39)),
             "soil-to-fertilizer: 39 0 15 #1"
         );
         assert_eq!(
-            actual.soil_to_fertilizer.get(&10),
-            Some(&49),
+            actual.soil_to_fertilizer.get(&Soil(10)),
+            Some(&Fertilizer(49)),
             "soil-to-fertilizer: 39 0 15 #2"
         );
         assert_eq!(
-            actual.soil_to_fertilizer.get(&14),
-            Some(&53),
+            actual.soil_to_fertilizer.get(&Soil(14)),
+            Some(&Fertilizer(53)),
             "soil-to-fertilizer: 39 0 15 #3"
         );
 
@@ -338,39 +495,39 @@ mod tests {
             "humidity-to-location"
         );
     }
-    
+
     #[test]
     fn test_getter() {
         let almanac = Almanac {
-            seeds: vec![1, 2, 3],
-            seed_to_soil: vec![(1, 100)].into_iter().collect(),
-            soil_to_fertilizer: vec![(1, 200)].into_iter().collect(),
-            fertilizer_to_water: vec![(1, 300)].into_iter().collect(),
-            water_to_light: vec![(1, 350)].into_iter().collect(),
-            light_to_temperature: vec![(1, 500)].into_iter().collect(),
-            temperature_to_humidity: vec![(1, 600)].into_iter().collect(),
-            humidity_to_location: vec![(1, 700)].into_iter().collect(),
+            seeds: vec![Seed(1), Seed(2), Seed(3)],
+            seed_to_soil: vec![(Seed(1), Soil(100))].into_iter().collect(),
+            soil_to_fertilizer: vec![(Soil(1), Fertilizer(200))].into_iter().collect(),
+            fertilizer_to_water: vec![(Fertilizer(1), Water(300))].into_iter().collect(),
+            water_to_light: vec![(Water(1), Light(350))].into_iter().collect(),
+            light_to_temperature: vec![(Light(1), Temperature(500))].into_iter().collect(),
+            temperature_to_humidity: vec![(Temperature(1), Humidity(600))].into_iter().collect(),
+            humidity_to_location: vec![(Humidity(1), Location(700))].into_iter().collect(),
         };
 
-        assert_eq!(almanac.soil(&1), 100);
-        assert_eq!(almanac.soil(&2), 2);
+        assert_eq!(almanac.soil(Seed(1)), Soil(100));
+        assert_eq!(almanac.soil(Seed(2)), Soil(2));
 
-        assert_eq!(almanac.fertilizer(&1), 200);
-        assert_eq!(almanac.fertilizer(&2), 2);
+        assert_eq!(almanac.fertilizer(Soil(1)), Fertilizer(200));
+        assert_eq!(almanac.fertilizer(Soil(2)), Fertilizer(2));
 
-        assert_eq!(almanac.water(&1), 300);
-        assert_eq!(almanac.water(&2), 2);
+        assert_eq!(almanac.water(Fertilizer(1)), Water(300));
+        assert_eq!(almanac.water(Fertilizer(2)), Water(2));
 
-        assert_eq!(almanac.light(&1), 350);
-        assert_eq!(almanac.light(&2), 2);
+        assert_eq!(almanac.light(Water(1)), Light(350));
+        assert_eq!(almanac.light(Water(2)), Light(2));
 
-        assert_eq!(almanac.temperature(&1), 500);
-        assert_eq!(almanac.temperature(&2), 2);
+        assert_eq!(almanac.temperature(Light(1)), Temperature(500));
+        assert_eq!(almanac.temperature(Light(2)), Temperature(2));
 
-        assert_eq!(almanac.humidity(&1), 600);
-        assert_eq!(almanac.humidity(&2), 2);
+        assert_eq!(almanac.humidity(Temperature(1)), Humidity(600));
+        assert_eq!(almanac.humidity(Temperature(2)), Humidity(2));
 
-        assert_eq!(almanac.location(&1), 700);
-        assert_eq!(almanac.location(&2), 2);
+        assert_eq!(almanac.location(Humidity(1)), Location(700));
+        assert_eq!(almanac.location(Humidity(2)), Location(2));
     }
 }
