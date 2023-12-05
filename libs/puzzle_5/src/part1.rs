@@ -1,6 +1,24 @@
 use crate::utils::*;
 use anyhow::{Context, Result};
 
+pub fn extract_seeds(input: &str) -> Result<Vec<Seed>> {
+    let raw_seeds = input
+        .trim()
+        .split(':')
+        .last()
+        .context("Failed to extract seeds")?;
+
+    raw_seeds
+        .split(' ')
+        .map(|num| num.trim())
+        .filter(|num| !num.is_empty())
+        .map(|num| {
+            num.parse()
+                .map(Seed)
+                .with_context(|| format!("Failed to parse {num}"))
+        })
+        .collect()
+}
 #[derive(Debug, PartialEq, Clone)]
 pub struct PlantDetails {
     pub seed: Seed,
@@ -34,9 +52,8 @@ fn get_details(almanac: &Almanac, seed: Seed) -> Result<PlantDetails> {
     })
 }
 
-pub fn get_lowest_location(almanac: &Almanac) -> Result<PlantDetails> {
-    let details: Result<Vec<_>> = almanac
-        .seeds
+pub fn get_lowest_location(seeds: Vec<Seed>, almanac: &Almanac) -> Result<PlantDetails> {
+    let details: Result<Vec<_>> = seeds
         .iter()
         .map(|seed| get_details(almanac, *seed))
         .collect();
@@ -89,11 +106,23 @@ mod test {
     }
 
     #[test]
+    fn test_extract_seeds() {
+        let input = "   seeds: 79 14 55 1213   ";
+
+        assert_eq!(
+            extract_seeds(input).unwrap(),
+            vec![Seed(79), Seed(14), Seed(55), Seed(1213)]
+        );
+    }
+
+    #[test]
     fn test_get_lowest_location() {
         let input = input();
-        let almanac = parse_input(input).unwrap();
+        let seeds = extract_seeds(input.lines().next().unwrap()).unwrap();
+        let lines: Vec<_> = input.lines().skip(1).collect();
+        let almanac = parse_input(&lines).unwrap();
 
-        let actual = get_lowest_location(&almanac).unwrap();
+        let actual = get_lowest_location(seeds, &almanac).unwrap();
 
         assert_eq!(
             actual,

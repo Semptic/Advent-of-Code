@@ -209,7 +209,6 @@ impl<S: Into<Id> + Copy, D: From<Id> + From<S>> Range<S, D> {
 
 #[derive(Debug, PartialEq)]
 pub struct Almanac {
-    pub seeds: Vec<Seed>,
     seed_to_soil: Vec<Range<Seed, Soil>>,
     soil_to_fertilizer: Vec<Range<Soil, Fertilizer>>,
     fertilizer_to_water: Vec<Range<Fertilizer, Water>>,
@@ -271,25 +270,6 @@ impl Almanac {
     }
 }
 
-fn extract_seeds(input: &str) -> Result<Vec<Seed>> {
-    let raw_seeds = input
-        .trim()
-        .split(':')
-        .last()
-        .context("Failed to extract seeds")?;
-
-    raw_seeds
-        .split(' ')
-        .map(|num| num.trim())
-        .filter(|num| !num.is_empty())
-        .map(|num| {
-            num.parse()
-                .map(Seed)
-                .with_context(|| format!("Failed to parse {num}"))
-        })
-        .collect()
-}
-
 fn extract_mapping<S: Into<Id> + Copy, D: From<Id> + From<S>>(line: &str) -> Result<Range<S, D>> {
     let trimmed = line.trim();
 
@@ -320,10 +300,7 @@ fn extract_mapping<S: Into<Id> + Copy, D: From<Id> + From<S>>(line: &str) -> Res
     Ok(Range::<S, D>::new(source, destination, length))
 }
 
-pub fn parse_input(input: &str) -> Result<Almanac> {
-    let seed_line = input.lines().next().context("Empty input")?;
-    let seeds = extract_seeds(seed_line)?;
-
+pub fn parse_input(input: &[&str]) -> Result<Almanac> {
     let mut seed_to_soil = Vec::new();
     let mut soil_to_fertilizer = Vec::new();
     let mut fertilizer_to_water = Vec::new();
@@ -333,7 +310,7 @@ pub fn parse_input(input: &str) -> Result<Almanac> {
     let mut humidity_to_location = Vec::new();
 
     let mut block: Option<BlockType> = None;
-    for line in input.lines().map(|line| line.trim()).skip(1) {
+    for line in input {
         if block.is_some() {
             if line.is_empty() {
                 block = None;
@@ -382,7 +359,6 @@ pub fn parse_input(input: &str) -> Result<Almanac> {
     humidity_to_location.sort_by_key(|range| range.source);
 
     Ok(Almanac {
-        seeds,
         seed_to_soil,
         soil_to_fertilizer,
         fertilizer_to_water,
@@ -435,16 +411,6 @@ mod tests {
     }
 
     #[test]
-    fn test_extract_seeds() {
-        let input = "   seeds: 79 14 55 1213   ";
-
-        assert_eq!(
-            extract_seeds(input).unwrap(),
-            vec![Seed(79), Seed(14), Seed(55), Seed(1213)]
-        );
-    }
-
-    #[test]
     fn test_extract_mapping() {
         assert_eq!(
             extract_mapping::<Seed, Soil>("50 98 2").unwrap(),
@@ -463,11 +429,9 @@ mod tests {
     #[test]
     fn test_parse_input() {
         let input = input();
+        let lines: Vec<_> = input.lines().collect();
 
-        let actual = parse_input(input).unwrap();
-
-        // Seed extraction
-        assert_eq!(actual.seeds, vec![Seed(79), Seed(14), Seed(55), Seed(13)],);
+        let actual = parse_input(&lines).unwrap();
 
         // seed-to-soil
         // 50 98 2
@@ -558,7 +522,6 @@ mod tests {
     #[test]
     fn test_getter() {
         let almanac = Almanac {
-            seeds: vec![Seed(1), Seed(2), Seed(3)],
             seed_to_soil: vec![Range::<Seed, Soil>::new(1, 100, 1)],
             soil_to_fertilizer: vec![Range::<Soil, Fertilizer>::new(1, 200, 1)],
             fertilizer_to_water: vec![Range::<Fertilizer, Water>::new(1, 300, 1)],
