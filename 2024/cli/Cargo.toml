@@ -1,0 +1,35 @@
+[package]
+name = "aoc"
+
+version.workspace = true
+authors.workspace = true
+description.workspace = true
+edition.workspace = true
+readme.workspace = true
+license-file.workspace = true
+
+[[bin]]
+name="aoc"
+path="src/main.rs"
+
+[dependencies]
+log = { workspace = true }
+anyhow = { workspace = true }
+
+clap = { workspace = true }
+clap-verbosity-flag = "~2"
+
+loggerv = "~0.7"
+ansi_term = "~0.12"
+
+hello_world = { path = "../libs/hello_world"  }
+common = { path = "../libs/common"  }
+puzzle_1 = { path = "../libs/puzzle_1"  }
+# puzzle_2 = { path = "../libs/puzzle_2"  }
+# puzzle_3 = { path = "../libs/puzzle_3"  }
+# puzzle_4 = { path = "../libs/puzzle_4"  }
+# puzzle_5 = { path = "../libs/puzzle_5"  }
+
+[dev-dependencies]
+assert_cmd = "2"
+predicates = "3"

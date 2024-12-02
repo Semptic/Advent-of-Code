@@ -1,0 +1,27 @@
+[workspace]
+resolver = "2"
+members = [
+  "libs/*",
+  "cli"
+ ]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Stefan Kuhn <stefan@kuhn.cloud>"]
+description = "My take on Advent of Code 2024"
+readme = "README.md"
+license-file = "MIT"
+
+[workspace.dependencies]
+log = "~0.4"
+thiserror = "^1.0"
+anyhow = "^1.0"
+clap = { version = "^4.0", features = ["derive"] }
+test-log = "*"
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.release]
+opt-level = 3 
