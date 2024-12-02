@@ -1,42 +1,41 @@
-use std::{fs::File, io::{self, BufRead}};
+use std::{fs::File, io::{BufReader, BufRead}};
 
-use anyhow::Result;
+use anyhow::{Context, Result};
 
-pub fn run(file: File) -> Result<i32> {
+pub fn run(file: File) -> Result<isize> {
     let mut left_list = Vec::new(); 
     let mut right_list = Vec::new();
 
-    let file = io::BufReader::new(file);
+    let file = BufReader::new(file);
 
     for line in file.lines() {
         let line = line?;
-        let mut word_iter = line.split_whitespace();
-        let left = word_iter.next().unwrap();
-        let right = word_iter.next().unwrap();
+        let mut words = line.split_whitespace();
 
-        let left = left.parse::<i32>()?;
-        let right = right.parse::<i32>()?;
+        let left = words.next().context("No left")?;
+        let left = left.parse::<isize>()?;
+
+        let right = words.next().context("No right")?;
+        let right = right.parse::<isize>()?;
 
         left_list.push(left);
         right_list.push(right);
     }
 
-    let d = distance(&mut left_list, &mut right_list)?;
-
-    Ok(d)
+    distance(&mut left_list, &mut right_list)
 }
 
-fn distance(left: &mut [i32], right: &mut [i32]) -> Result<i32> {
+fn distance(left: &mut [isize], right: &mut [isize]) -> Result<isize> {
     left.sort();
     right.sort();
 
-    let d = left.iter().zip(right.iter()).fold(0, |acc, (l, r)| {
+    let result = left.iter().zip(right.iter()).fold(0, |acc, (l, r)| {
         let d = l - r;
 
         acc + d.abs()
     });
 
-    Ok(d)
+    Ok(result)
 }
 
 #[cfg(test)]

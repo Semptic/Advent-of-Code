@@ -1,30 +1,28 @@
-use std::{fs::File, io::{self, BufRead}};
+use std::{fs::File, io::{BufReader, BufRead}};
 
-use anyhow::Result;
-use log::debug;
+use anyhow::{Context, Result};
 
 pub fn run(file: File) -> Result<usize> {
     let mut left_list = Vec::new(); 
     let mut right_list = Vec::new();
 
-    let file = io::BufReader::new(file);
+    let file = BufReader::new(file);
 
     for line in file.lines() {
         let line = line?;
-        let mut word_iter = line.split_whitespace();
-        let left = word_iter.next().unwrap();
-        let right = word_iter.next().unwrap();
+        let mut words = line.split_whitespace();
 
+        let left = words.next().context("No left")?;
         let left = left.parse::<usize>()?;
+
+        let right = words.next().context("No right")?;
         let right = right.parse::<usize>()?;
 
         left_list.push(left);
         right_list.push(right);
     }
 
-    let d = similarity(left_list, right_list)?;
-
-    Ok(d)
+    similarity(left_list, right_list)
 }
 
 fn similarity(left: Vec<usize>, right: Vec<usize>) -> Result<usize> {
@@ -36,7 +34,6 @@ fn similarity(left: Vec<usize>, right: Vec<usize>) -> Result<usize> {
 
     let s = left.iter().fold(0, |acc, l| {
         let count = right.iter().filter(|r| *r == l).count();
-        debug!("{l} -> {count}");
 
         acc + l * count
     });
