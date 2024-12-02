@@ -1,7 +1,9 @@
-use std::{fs::File, io::{self, BufRead}};
+use std::{
+    fs::File,
+    io::{self, BufRead},
+};
 
 use anyhow::Result;
-use log::{debug, info};
 
 pub fn run(file: File) -> Result<usize> {
     let file = io::BufReader::new(file);
@@ -18,53 +20,50 @@ pub fn run(file: File) -> Result<usize> {
         } else {
             acc
         }
-
     });
     Ok(result)
 }
 
- fn is_report_save(report: &[usize]) -> Result<bool> {
+fn is_report_save(report: &[usize]) -> Result<bool> {
     let len = report.len();
     let n = len - 1;
 
     let mut positive: Option<bool> = None;
     for index in 0..n {
-            let diff = isize::try_from(report[index])? - isize::try_from(report[index + 1])?;
+        let diff = isize::try_from(report[index])? - isize::try_from(report[index + 1])?;
 
-            if diff == 0 {
+        if diff == 0 {
+            return Ok(false);
+        }
+
+        if let Some(positive) = positive {
+            if diff > 0 && !positive {
+                return Ok(false);
+            } else if diff < 0 && positive {
                 return Ok(false);
             }
-
-            if let Some(positive) = positive {
-                if diff > 0 && !positive {
-                   return Ok(false);
-                } else if diff < 0 && positive {
-                   return Ok(false);
-                }
-            } else { 
-                if diff > 0 {
-                   positive = Some(true);
-                } else {
-                   positive = Some(false);
-                }
+        } else {
+            if diff > 0 {
+                positive = Some(true);
+            } else {
+                positive = Some(false);
             }
-                
-            let diff = diff.abs(); 
+        }
 
-            if diff < 1 || diff > 3 {
-                return Ok(false)
-            }
+        let diff = diff.abs();
+
+        if diff < 1 || diff > 3 {
+            return Ok(false);
+        }
     }
 
     Ok(true)
 }
 
-
-
 #[cfg(test)]
 mod tests {
-    use test_log::test;
     use super::*;
+    use test_log::test;
 
     #[test]
     fn test() {

@@ -1,9 +1,12 @@
-use std::{fs::File, io::{BufReader, BufRead}};
+use std::{
+    fs::File,
+    io::{BufRead, BufReader},
+};
 
 use anyhow::{Context, Result};
 
 pub fn run(file: File) -> Result<usize> {
-    let mut left_list = Vec::new(); 
+    let mut left_list = Vec::new();
     let mut right_list = Vec::new();
 
     let file = BufReader::new(file);
@@ -28,7 +31,7 @@ pub fn run(file: File) -> Result<usize> {
 fn similarity(left: Vec<usize>, right: Vec<usize>) -> Result<usize> {
     let mut left = left;
     let mut right = right;
-    
+
     left.sort();
     right.sort();
 
@@ -43,8 +46,8 @@ fn similarity(left: Vec<usize>, right: Vec<usize>) -> Result<usize> {
 
 #[cfg(test)]
 mod tests {
-    use test_log::test;
     use super::*;
+    use test_log::test;
 
     #[test]
     fn test() {

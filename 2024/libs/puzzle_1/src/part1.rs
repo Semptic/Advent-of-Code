@@ -1,9 +1,12 @@
-use std::{fs::File, io::{BufReader, BufRead}};
+use std::{
+    fs::File,
+    io::{BufRead, BufReader},
+};
 
 use anyhow::{Context, Result};
 
 pub fn run(file: File) -> Result<isize> {
-    let mut left_list = Vec::new(); 
+    let mut left_list = Vec::new();
     let mut right_list = Vec::new();
 
     let file = BufReader::new(file);
