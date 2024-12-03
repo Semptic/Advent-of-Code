@@ -13,7 +13,7 @@ pub struct Command {}
 
 impl common::CommandRunner for Command {
     fn run(&self) -> Result<()> {
-        let input_file = "data/puzzle_2/input.txt";
+        let input_file = "data/puzzle_3/input.txt";
 
         let file = File::open(input_file)?;
         let result = part1::run(file)?;
