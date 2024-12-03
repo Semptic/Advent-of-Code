@@ -91,6 +91,7 @@ dependencies = [
  "predicates",
  "puzzle_1",
  "puzzle_2",
+ "puzzle_3",
 ]
 
 [[package]]
@@ -420,6 +421,17 @@ dependencies = [
 
 [[package]]
 name = "puzzle_2"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "common",
+ "log",
+ "test-log",
+]
+
+[[package]]
+name = "puzzle_3"
 version = "0.1.0"
 dependencies = [
  "anyhow",

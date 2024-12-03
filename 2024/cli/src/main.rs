@@ -44,7 +44,7 @@ enum Puzzles {
     HelloWorld(hello_world::Command),
     Puzzle1(puzzle_1::Command),
     Puzzle2(puzzle_2::Command),
-    //    Puzzle3(puzzle_3::Command),
+    Puzzle3(puzzle_3::Command),
     //    Puzzle4(puzzle_4::Command),
     //    Puzzle5(puzzle_5::Command),
 }
@@ -55,7 +55,7 @@ impl Puzzles {
             Puzzles::HelloWorld(cmd) => cmd.run().context("Failed to run hello world"),
             Puzzles::Puzzle1(cmd) => cmd.run().context("Failed to run puzzle 1"),
             Puzzles::Puzzle2(cmd) => cmd.run().context("Failed to run puzzle 2"),
-            //            Puzzles::Puzzle3(cmd) => cmd.run().context("Failed to run puzzle 3"),
+            Puzzles::Puzzle3(cmd) => cmd.run().context("Failed to run puzzle 3"),
             //            Puzzles::Puzzle4(cmd) => cmd.run().context("Failed to run puzzle 4"),
             //            Puzzles::Puzzle5(cmd) => cmd.run().context("Failed to run puzzle 5"),
         }

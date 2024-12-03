@@ -1,0 +1,20 @@
+[package]
+name = "puzzle_3"
+
+version.workspace = true
+authors.workspace = true
+description.workspace = true
+edition.workspace = true
+readme.workspace = true
+license-file.workspace = true
+
+[dependencies]
+log = { workspace = true }
+anyhow = { workspace = true }
+clap = { workspace = true }
+
+common = { path = "../../libs/common"  }
+
+[dev-dependencies]
+test-log = { workspace = true }
+
