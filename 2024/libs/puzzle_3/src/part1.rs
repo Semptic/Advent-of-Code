@@ -1,14 +1,30 @@
 use std::{
     fs::File,
-    io::{self, BufRead},
+    io::{self, BufRead, Read},
 };
 
 use anyhow::Result;
 
-pub fn run(file: File) -> Result<usize> {
-    let file = io::BufReader::new(file);
+use crate::parser::extract_mult;
 
-    Ok(0)
+pub fn run(file: File) -> Result<isize> {
+    let mut file = io::BufReader::new(file);
+    
+    let mut buffer = String::new();
+
+    file.read_to_string(&mut buffer)?;
+
+    compute(buffer)
+}
+
+fn compute(input: String) -> Result<isize> {
+  let mult = extract_mult(input)?;
+
+  let result = mult.iter().fold(0, |acc, mul| {
+    acc + mul.x * mul.y
+  });
+
+  Ok(isize::try_from(result).unwrap())
 }
 
 
@@ -19,11 +35,9 @@ mod tests {
 
     #[test]
     fn test() {
-        // assert_eq!(is_report_save(&mut vec![7, 6, 4, 2, 1]).unwrap(), true);
-        // assert_eq!(is_report_save(&mut vec![1, 2, 7, 8, 9]).unwrap(), false);
-        // assert_eq!(is_report_save(&mut vec![9, 7, 6, 2, 1]).unwrap(), false);
-        // assert_eq!(is_report_save(&mut vec![1, 3, 2, 4, 5]).unwrap(), false);
-        // assert_eq!(is_report_save(&mut vec![8, 6, 4, 4, 1]).unwrap(), false);
-        // assert_eq!(is_report_save(&mut vec![1, 3, 6, 7, 9]).unwrap(), true);
+      let input = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))";
+      let result = 161;
+
+      assert_eq!(compute(input.to_string()).unwrap(), result);
     }
 }

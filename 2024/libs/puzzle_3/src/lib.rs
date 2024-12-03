@@ -1,4 +1,5 @@
 #![feature(vec_pop_if)]
+mod parser;
 mod part1;
 mod part2;
 

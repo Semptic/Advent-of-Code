@@ -74,7 +74,6 @@ fn is_report_save_cheat(report: Vec<usize>) -> Result<bool> {
         ReportSafety::Save => Ok(true),
         ReportSafety::Unsafe(index) => {
             let len = report.len();
-            let mut cheat_reports: Vec<usize> = Vec::new();
 
             if index > 0 {
                 let mut cheat_report = report.clone();
